@@ -21,7 +21,11 @@ interface Device {
   status: 'online' | 'offline';
 }
 
-export function Settings() {
+interface SettingsProps {
+  onNavigate?: (view: string) => void;
+}
+
+export function Settings({ onNavigate }: SettingsProps) {
   const [activeTab, setActiveTab] = useState('backup');
   const [autoSync, setAutoSync] = useState(true);
   const [syncFrequency, setSyncFrequency] = useState('hourly');

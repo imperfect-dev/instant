@@ -32,7 +32,7 @@ function AppContent() {
       case 'signup':
         return <SignupPage onNavigate={setCurrentView} />;
       case 'dashboard':
-        return <Dashboard />;
+        return <Dashboard onNavigate={setCurrentView} />;
       case 'upload':
         return <Upload />;
       case 'history':
@@ -40,7 +40,7 @@ function AppContent() {
       case 'backup-restore':
         return <BackupHistoryRestore />;
       case 'settings':
-        return <Settings />;
+        return <Settings onNavigate={setCurrentView} />;
       case 'trash':
         return <TrashBin />;
       case 'scheduler':

@@ -13,7 +13,11 @@ import { useNotifications } from '../contexts/NotificationContext';
 import { useStorage } from '../hooks/useStorage';
 import { useBackup } from '../hooks/useBackup';
 
-export function Dashboard() {
+interface DashboardProps {
+  onNavigate?: (view: string) => void;
+}
+
+export function Dashboard({ onNavigate }: DashboardProps) {
   const { addNotification } = useNotifications();
   const { stats, formatBytes } = useStorage();
   const { createBackupSession, startBackup, sessions } = useBackup();
