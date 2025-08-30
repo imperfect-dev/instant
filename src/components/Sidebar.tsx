@@ -5,14 +5,14 @@ import {
   History, 
   Settings, 
   Trash2, 
-  Users, 
   Shield,
-  BarChart3,
   Clock,
-  Activity,
+  RotateCcw,
   X,
-  ChevronRight
+  ChevronRight,
+  LogOut
 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 interface SidebarProps {
   currentView: string;
@@ -22,13 +22,14 @@ interface SidebarProps {
 }
 
 export function Sidebar({ currentView, onViewChange, isOpen, onClose }: SidebarProps) {
+  const { logout } = useAuth();
+
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'upload', label: 'Upload', icon: Upload },
     { id: 'history', label: 'Backup History', icon: History },
+    { id: 'backup-restore', label: 'Backup & Restore', icon: RotateCcw },
     { id: 'scheduler', label: 'Scheduler', icon: Clock },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'monitoring', label: 'Health Monitor', icon: Activity },
     { id: 'trash', label: 'Trash Bin', icon: Trash2 },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
@@ -39,6 +40,11 @@ export function Sidebar({ currentView, onViewChange, isOpen, onClose }: SidebarP
     onClose();
   };
 
+  const handleLogout = () => {
+    logout();
+    onViewChange('landing');
+    onClose();
+  };
   return (
     <>
       {/* Mobile overlay */}
@@ -102,7 +108,7 @@ export function Sidebar({ currentView, onViewChange, isOpen, onClose }: SidebarP
 
           {/* Footer */}
           <div className="p-4 border-t border-gray-200">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 mb-3">
               <div className="flex items-center space-x-2 mb-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span className="text-sm font-medium text-gray-900">
@@ -113,6 +119,14 @@ export function Sidebar({ currentView, onViewChange, isOpen, onClose }: SidebarP
                 Upgrade for more storage
               </p>
             </div>
+            
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="font-medium">Logout</span>
+            </button>
           </div>
         </div>
       </div>

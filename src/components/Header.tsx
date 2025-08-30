@@ -7,14 +7,17 @@ interface HeaderProps {
 }
 
 const viewTitles = {
+  landing: 'Welcome',
+  login: 'Login',
+  signup: 'Sign Up',
   dashboard: 'Dashboard',
   upload: 'Data Upload',
   history: 'Backup History',
+  'backup-restore': 'Backup History & Restore',
   settings: 'Settings',
   trash: 'Trash Bin',
-  analytics: 'Analytics',
   scheduler: 'Scheduler',
-  monitoring: 'Health Monitor'
+  subscription: 'Subscription Plans'
 };
 
 export function Header({ currentView, onMenuClick }: HeaderProps) {
