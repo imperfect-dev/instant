@@ -8,7 +8,8 @@ import {
   HardDrive, 
   Clock, 
   ArrowLeft,
-  Crown
+  Crown,
+  Sparkles
 } from 'lucide-react';
 import { useNotifications } from '../contexts/NotificationContext';
 
@@ -32,7 +33,6 @@ interface Plan {
   storage: string;
   devices: string;
   support: string;
-  color: string;
   icon: React.ComponentType<any>;
 }
 
@@ -49,7 +49,6 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
       storage: '5 GB',
       devices: '1 device',
       support: 'Community support',
-      color: 'border-gray-200 bg-white',
       icon: Shield,
       features: [
         { text: '5 GB secure storage', included: true },
@@ -72,7 +71,6 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
       storage: '1 TB',
       devices: '5 devices',
       support: 'Priority email support',
-      color: 'border-blue-500 bg-blue-50',
       icon: Zap,
       features: [
         { text: '1 TB secure storage', included: true },
@@ -94,7 +92,6 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
       storage: 'Unlimited',
       devices: 'Unlimited',
       support: '24/7 phone & chat support',
-      color: 'border-purple-500 bg-purple-50',
       icon: Crown,
       features: [
         { text: 'Unlimited secure storage', included: true },
@@ -136,25 +133,23 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in-up">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={() => onNavigate('dashboard')}
-            className="flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </button>
-        </div>
+        <button
+          onClick={() => onNavigate('dashboard')}
+          className="flex items-center text-blue-400 hover:text-blue-300 font-medium transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Dashboard
+        </button>
       </div>
 
       <div className="text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
           Choose Your Plan
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
           Select the perfect plan for your backup needs. Upgrade or downgrade anytime.
         </p>
       </div>
@@ -166,13 +161,13 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
           return (
             <div
               key={plan.id}
-              className={`relative rounded-2xl border-2 p-8 transition-all hover:shadow-lg ${plan.color} ${
-                plan.popular ? 'transform scale-105' : ''
+              className={`relative card-glass card-hover p-8 transition-all ${
+                plan.popular ? 'border-2 border-blue-500/50 scale-105' : 'border border-white/10'
               }`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1">
+                  <div className="gradient-primary text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center space-x-1 shadow-lg">
                     <Star className="h-4 w-4" />
                     <span>Most Popular</span>
                   </div>
@@ -180,33 +175,31 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
               )}
 
               <div className="text-center mb-8">
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ${
-                  plan.id === 'free' ? 'bg-gray-100' :
-                  plan.id === 'pro' ? 'bg-blue-600' : 'bg-purple-600'
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg ${
+                  plan.id === 'free' ? 'bg-gray-600/20' :
+                  plan.id === 'pro' ? 'gradient-primary' : 'bg-gradient-to-br from-purple-600 to-pink-600'
                 }`}>
-                  <Icon className={`h-8 w-8 ${
-                    plan.id === 'free' ? 'text-gray-600' : 'text-white'
-                  }`} />
+                  <Icon className="h-8 w-8 text-white" />
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                <p className="text-gray-600 mb-4">{plan.description}</p>
+                <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
+                <p className="text-gray-400 mb-6">{plan.description}</p>
                 
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                  <span className="text-gray-600 ml-2">{plan.period}</span>
+                <div className="mb-6">
+                  <span className="text-4xl font-bold text-white">{plan.price}</span>
+                  <span className="text-gray-400 ml-2">{plan.period}</span>
                 </div>
 
-                <div className="space-y-1 text-sm text-gray-600">
-                  <div className="flex items-center justify-center space-x-2">
+                <div className="grid grid-cols-1 gap-2 text-sm text-gray-400 mb-6">
+                  <div className="flex items-center justify-center space-x-2 bg-white/5 rounded-lg py-2">
                     <HardDrive className="h-4 w-4" />
                     <span>{plan.storage} storage</span>
                   </div>
-                  <div className="flex items-center justify-center space-x-2">
+                  <div className="flex items-center justify-center space-x-2 bg-white/5 rounded-lg py-2">
                     <Users className="h-4 w-4" />
                     <span>{plan.devices}</span>
                   </div>
-                  <div className="flex items-center justify-center space-x-2">
+                  <div className="flex items-center justify-center space-x-2 bg-white/5 rounded-lg py-2">
                     <Clock className="h-4 w-4" />
                     <span>{plan.support}</span>
                   </div>
@@ -217,16 +210,16 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
                 {plan.features.map((feature, index) => (
                   <div key={index} className="flex items-center space-x-3">
                     <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
-                      feature.included ? 'bg-emerald-100' : 'bg-gray-100'
+                      feature.included ? 'bg-emerald-500/20' : 'bg-gray-600/20'
                     }`}>
                       {feature.included ? (
-                        <Check className="h-3 w-3 text-emerald-600" />
+                        <Check className="h-3 w-3 text-emerald-400" />
                       ) : (
-                        <div className="w-2 h-2 bg-gray-400 rounded-full" />
+                        <div className="w-2 h-2 bg-gray-500 rounded-full" />
                       )}
                     </div>
                     <span className={`text-sm ${
-                      feature.included ? 'text-gray-900' : 'text-gray-400'
+                      feature.included ? 'text-white' : 'text-gray-500'
                     }`}>
                       {feature.text}
                     </span>
@@ -236,12 +229,12 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
 
               <button
                 onClick={() => handleSelectPlan(plan.id)}
-                className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
+                className={`w-full py-3 px-4 rounded-xl font-semibold transition-all ${
                   plan.id === 'free' 
-                    ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-gray-600 text-gray-300 hover:bg-gray-500'
                     : plan.id === 'pro'
-                    ? 'bg-blue-600 text-white hover:bg-blue-700 transform hover:scale-105'
-                    : 'bg-purple-600 text-white hover:bg-purple-700 transform hover:scale-105'
+                    ? 'btn-primary hover:scale-105'
+                    : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 hover:scale-105'
                 }`}
               >
                 {plan.id === 'free' ? 'Current Plan' : `Upgrade to ${plan.name}`}
@@ -252,38 +245,43 @@ export function SubscriptionModels({ onNavigate }: SubscriptionModelsProps) {
       </div>
 
       {/* FAQ Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-        <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">
+      <div className="card-glass p-8">
+        <h3 className="text-2xl font-bold text-white mb-8 text-center flex items-center justify-center">
+          <Sparkles className="h-6 w-6 mr-2 text-blue-400" />
           Frequently Asked Questions
         </h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h4 className="font-medium text-gray-900 mb-2">Can I change plans anytime?</h4>
-            <p className="text-sm text-gray-600">
-              Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-semibold text-white mb-2">Can I change plans anytime?</h4>
+              <p className="text-gray-400">
+                Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-white mb-2">Is my data secure?</h4>
+              <p className="text-gray-400">
+                Absolutely. We use end-to-end encryption and your data is stored across multiple secure data centers.
+              </p>
+            </div>
           </div>
           
-          <div>
-            <h4 className="font-medium text-gray-900 mb-2">Is my data secure?</h4>
-            <p className="text-sm text-gray-600">
-              Absolutely. We use end-to-end encryption and your data is stored across multiple secure data centers.
-            </p>
-          </div>
-          
-          <div>
-            <h4 className="font-medium text-gray-900 mb-2">What happens to my data if I cancel?</h4>
-            <p className="text-sm text-gray-600">
-              Your data remains accessible for 30 days after cancellation, giving you time to download everything.
-            </p>
-          </div>
-          
-          <div>
-            <h4 className="font-medium text-gray-900 mb-2">Do you offer refunds?</h4>
-            <p className="text-sm text-gray-600">
-              Yes, we offer a 30-day money-back guarantee for all paid plans. No questions asked.
-            </p>
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-semibold text-white mb-2">What happens to my data if I cancel?</h4>
+              <p className="text-gray-400">
+                Your data remains accessible for 30 days after cancellation, giving you time to download everything.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-white mb-2">Do you offer refunds?</h4>
+              <p className="text-gray-400">
+                Yes, we offer a 30-day money-back guarantee for all paid plans. No questions asked.
+              </p>
+            </div>
           </div>
         </div>
       </div>

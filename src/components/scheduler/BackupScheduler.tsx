@@ -9,7 +9,8 @@ import {
   Calendar,
   Settings,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Zap
 } from 'lucide-react';
 import { BackupScheduler, ScheduleConfig } from '../../services/scheduler';
 import { useNotifications } from '../../contexts/NotificationContext';
@@ -19,7 +20,6 @@ export function BackupSchedulerComponent() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<ScheduleConfig | null>(null);
   const [scheduler] = useState(() => new BackupScheduler((schedule) => {
-    // Handle backup trigger
     addNotification({
       type: 'info',
       message: `Scheduled backup "${schedule.name}" started`
@@ -100,15 +100,15 @@ export function BackupSchedulerComponent() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in-up">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Backup Scheduler</h2>
-          <p className="text-gray-600">Automate your backups with custom schedules</p>
+          <h2 className="text-3xl font-bold text-white">Backup Scheduler</h2>
+          <p className="text-gray-400">Automate your backups with custom schedules</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="btn-primary"
         >
           <Plus className="h-4 w-4 mr-2" />
           New Schedule
@@ -116,36 +116,41 @@ export function BackupSchedulerComponent() {
       </div>
 
       {schedules.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-          <Clock className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No Schedules Yet</h3>
-          <p className="text-gray-600 mb-6">Create your first backup schedule to automate your data protection</p>
+        <div className="card-glass p-16 text-center">
+          <div className="w-20 h-20 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Clock className="h-10 w-10 text-blue-400" />
+          </div>
+          <h3 className="text-2xl font-bold text-white mb-4">No Schedules Yet</h3>
+          <p className="text-gray-400 mb-8 max-w-md mx-auto">
+            Create your first backup schedule to automate your data protection and never worry about losing files again.
+          </p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="btn-primary"
           >
+            <Plus className="h-4 w-4 mr-2" />
             Create Schedule
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {schedules.map((schedule) => (
-            <div key={schedule.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-start justify-between mb-4">
+            <div key={schedule.id} className="card-glass card-hover p-6">
+              <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center space-x-3">
-                  <div className={`p-2 rounded-full ${schedule.enabled ? 'bg-emerald-100' : 'bg-gray-100'}`}>
+                  <div className={`p-3 rounded-xl ${schedule.enabled ? 'bg-emerald-500/20' : 'bg-gray-600/20'}`}>
                     {schedule.enabled ? (
-                      <CheckCircle className="h-5 w-5 text-emerald-600" />
+                      <CheckCircle className="h-6 w-6 text-emerald-400" />
                     ) : (
-                      <AlertCircle className="h-5 w-5 text-gray-400" />
+                      <AlertCircle className="h-6 w-6 text-gray-400" />
                     )}
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{schedule.name}</h3>
-                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
+                    <h3 className="font-semibold text-white">{schedule.name}</h3>
+                    <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full mt-2 ${
                       schedule.backupType === 'full' 
-                        ? 'bg-blue-100 text-blue-800' 
-                        : 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' 
+                        : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                     }`}>
                       {schedule.backupType}
                     </span>
@@ -155,51 +160,58 @@ export function BackupSchedulerComponent() {
                 <div className="flex items-center space-x-1">
                   <button
                     onClick={() => handleToggleSchedule(schedule)}
-                    className={`p-1 rounded transition-colors ${
+                    className={`p-2 rounded-xl transition-colors ${
                       schedule.enabled 
-                        ? 'text-emerald-600 hover:bg-emerald-50' 
-                        : 'text-gray-400 hover:bg-gray-50'
+                        ? 'text-emerald-400 hover:bg-emerald-500/10' 
+                        : 'text-gray-400 hover:bg-gray-600/10'
                     }`}
                   >
                     {schedule.enabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                   </button>
                   <button
                     onClick={() => setEditingSchedule(schedule)}
-                    className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    className="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-xl transition-colors"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteSchedule(schedule.id)}
-                    className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <Calendar className="h-4 w-4" />
-                  <span>{getFrequencyText(schedule)}</span>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3 text-gray-300">
+                  <Calendar className="h-4 w-4 text-blue-400" />
+                  <span className="text-sm">{getFrequencyText(schedule)}</span>
                 </div>
                 
-                <div className="text-sm text-gray-600">
-                  <p><strong>Includes:</strong> {schedule.includePaths.length} paths</p>
-                  {schedule.excludePaths.length > 0 && (
-                    <p><strong>Excludes:</strong> {schedule.excludePaths.length} paths</p>
-                  )}
+                <div className="bg-white/5 rounded-xl p-4">
+                  <div className="text-sm text-gray-400 space-y-1">
+                    <p><span className="text-white font-medium">Includes:</span> {schedule.includePaths.length} paths</p>
+                    {schedule.excludePaths.length > 0 && (
+                      <p><span className="text-white font-medium">Excludes:</span> {schedule.excludePaths.length} paths</p>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex items-center justify-between text-sm">
-                  <span className={`font-medium ${schedule.enabled ? 'text-emerald-600' : 'text-gray-500'}`}>
-                    {schedule.enabled ? 'Active' : 'Inactive'}
+              <div className="mt-6 pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between">
+                  <span className={`font-semibold flex items-center space-x-2 ${
+                    schedule.enabled ? 'text-emerald-400' : 'text-gray-500'
+                  }`}>
+                    <div className={`w-2 h-2 rounded-full ${
+                      schedule.enabled ? 'bg-emerald-400 animate-pulse' : 'bg-gray-500'
+                    }`}></div>
+                    <span>{schedule.enabled ? 'Active' : 'Inactive'}</span>
                   </span>
                   <button
                     onClick={() => setEditingSchedule(schedule)}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
+                    className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
                   >
                     Configure
                   </button>
@@ -255,37 +267,39 @@ function ScheduleModal({ schedule, onSave, onCancel }: ScheduleModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="card-glass max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-fade-in-up">
+        <div className="p-8 border-b border-white/10">
+          <h3 className="text-2xl font-bold text-white">
             {schedule ? 'Edit Schedule' : 'Create New Schedule'}
           </h3>
+          <p className="text-gray-400 mt-1">Configure your automated backup schedule</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-8 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Schedule Name
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input-glass w-full"
+              placeholder="e.g., Daily Documents Backup"
               required
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Frequency
               </label>
               <select
                 value={formData.frequency}
                 onChange={(e) => setFormData({ ...formData, frequency: e.target.value as any })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="input-glass w-full"
               >
                 <option value="hourly">Hourly</option>
                 <option value="daily">Daily</option>
@@ -295,13 +309,13 @@ function ScheduleModal({ schedule, onSave, onCancel }: ScheduleModalProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Backup Type
               </label>
               <select
                 value={formData.backupType}
                 onChange={(e) => setFormData({ ...formData, backupType: e.target.value as any })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="input-glass w-full"
               >
                 <option value="incremental">Incremental</option>
                 <option value="full">Full Backup</option>
@@ -311,27 +325,27 @@ function ScheduleModal({ schedule, onSave, onCancel }: ScheduleModalProps) {
 
           {formData.frequency !== 'hourly' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Time
               </label>
               <input
                 type="time"
                 value={formData.time}
                 onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="input-glass w-full max-w-xs"
               />
             </div>
           )}
 
           {formData.frequency === 'weekly' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Day of Week
               </label>
               <select
                 value={formData.dayOfWeek || ''}
                 onChange={(e) => setFormData({ ...formData, dayOfWeek: e.target.value ? Number(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="input-glass w-full max-w-xs"
               >
                 <option value="">Select day</option>
                 <option value="0">Sunday</option>
@@ -347,7 +361,7 @@ function ScheduleModal({ schedule, onSave, onCancel }: ScheduleModalProps) {
 
           {formData.frequency === 'monthly' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Day of Month
               </label>
               <input
@@ -356,35 +370,35 @@ function ScheduleModal({ schedule, onSave, onCancel }: ScheduleModalProps) {
                 max="31"
                 value={formData.dayOfMonth || ''}
                 onChange={(e) => setFormData({ ...formData, dayOfMonth: e.target.value ? Number(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="input-glass w-full max-w-xs"
               />
             </div>
           )}
 
-          <div className="flex items-center">
+          <div className="flex items-center space-x-3">
             <input
               type="checkbox"
               id="enabled"
               checked={formData.enabled}
               onChange={(e) => setFormData({ ...formData, enabled: e.target.checked })}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-white/10"
             />
-            <label htmlFor="enabled" className="ml-2 text-sm text-gray-700">
-              Enable this schedule
+            <label htmlFor="enabled" className="text-gray-300">
+              Enable this schedule immediately
             </label>
           </div>
 
-          <div className="flex space-x-3 pt-4">
+          <div className="flex space-x-4 pt-6">
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex-1 btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex-1 btn-primary"
             >
               {schedule ? 'Update' : 'Create'} Schedule
             </button>
